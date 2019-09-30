@@ -1,46 +1,42 @@
 # perceptron
 A simple single-layer perceptron constructed in R.
 
-## Problema proposto
+## Example
 
-Esta seção propõe-se a exibir um pequeno modelo de aprendizado de máquina (Perceptron simples) construido para ser aplicado na classificação binária de itens em estoque. A empresa em questão é fictícia e comporta, em seu estoque de matéria-prima, alguns itens que tem custo de aquisição de pallets com valores variados, bem como giro de utilização dos itens. Em resumo, os itens com maior valor de aquisição e alto giro de estoque serão classificados como "prime", ao passo que os componentes mais baratos e com menos utilização são classificados como "standard".
+In this section, I will deploy and explain how a single-layer perceptron algorithm works. It is constructed for binary classification of items in inventory. The fictional company of the example uses several types of raw materials, with different acquisition costs and different levels of item usage. Briefly, the more a raw material is used and the more costly it is, the more likely this item is to be labelled as "prime". On the other hand, if the item is not costly nor used frequently in production, the item is labelled as "standard".
 
-Esta distinção faz alusão à classificação de acordo com a curva ABC, ou curva de Pareto, que classifica itens de acordo com seu grau de importância, levando em consideração seu valor. Contudo, o modelo proposto difere da curva ABC por levar em consideração mais do que um critério (custo e giro de estoque), bem como classificar os itens de maneira dicotômica, não em A, B e C.
+This distinction is loosely based in the Pareto or ABC curve, which classifies items according to its relevance degree, taking into consideration the value the item has to the organization. However, the proposed model for this example is different because its classification considers more than one factor at once (both cost and item usage), and classifies items into two different groups, rather than in three groups (A, B and C).
 
-Também é importante notar que a distinção dos itens em classificações diferentes auxiliam na política de gestão de estoques item a item, bem como no posicionamento físico dos componentes dentro do galpão de estoque. Por exemplo, itens classificados como "prime" provavelmente deveriam ser posicionados próximos à entrada/saída do prédio, uma vez que isso evita o deslocamento até os fundos do galpão, por parte do funcionário responsável por entregar a matéria-prima à produção. Consequentemente, itens mais baratos e menos utilizados tem uma importância menor para a produção e podem ser alocados mais distantes da porta.
+It is also worth mentioning that classifying the items in stock is useful for companies due to the fact that it helps managers decide which stock control policy they will adopt for each item, and also where the items should be placed physically in the warehouse. For instance, "prime" items probably should be placed near the entrance of the plant, since it avoids unnecessary movement in the warehouse (the personnel responsible for retrieving the raw material would not have to go all the way to the rear in order to get an item with high itemUsage level). Consequently, less costly items and items used more sparingly should be placed in a more distant position in the warehouse.
 
-Neste caso, a empresa fictícia em questão tem dados históricos de **250 itens diferentes** e informações cedidas por especialistas sobre o grau de importância de cada um destes componentes. No geral, itens prime costumam ter como característica um *custo por pallet* que vai de **\$650** até **\$1000**, enquanto que os itens standard vão de **\$100** até no máximo **\$600** por pallet. Em relação ao *giro de estoque*, itens prime costumam ser utilizados a uma taxa que vai de **23 pallets/trimestre** até **35 pallets/trimestre**, enquanto que itens standards são utilizados a uma taxa de **4 pallets/trimestre** e no máximo **22 pallets/trimestre**.
+For this example, the fictional company holds data history of **250 different items** and information regarding their level of importance for the logistics manager, according to subjective classification. In general, prime item's *cost per pallet* range from **\$650** up to **\$1000**, whereas standard items range from **\$100** to **\$600**. Regarding item usage, prime items are used in a rate not lower than **23 pallets/trimester** and not higher than **35 pallets/trimester**. On the other hand, standard items are never used in a rate below **4 pallets/trimester** and above **22 pallets/trimester*.
 
-**A empresa gostaria de poder classificar, sem pedir ajuda aos especialistas, novas matérias-primas que serão integradas à produção.**
+**In this scenario, the CEO of the company would like to classify new raw materials according to the neural network, by using previous information available.**
 
-## Perceptron simples
+## Single-layer perceptron
 
-O algoritmo para o sistema proposto utiliza a abordagem de inteligência artificial, que visa resolver problemas reais por intermédio de computação e matemática valendo-se de mecanismos que simulem a cognição humana. Dentre as possíveis abordagens de inteligência artificial, uma das mais utilizadas é a de aprendizado de máquina, ou machine learning (ML). Algoritmos de ML tem como característica principal a utilização de conjuntos de dados previamente coletados para alimentar um sistema inteligente, que aprenderá a exercer sua tarefa de forma sensata (seja uma classificação, seja uma ordenação, ou mesmo uma escolha). A problemática em foco é a de classificação de itens em estoque, portanto sendo necessário a utilização de um algoritmo de ML que possa executar tal tarefa.
+The code for the proposed neural network is part of a family of solutions known as Machine Learning. This approach uses previous data and weights in order to start learning how to classify new data, a process called *training*. During training, an error function helps the algorithm adjust weights, which in turn process input data and outputs a class. Several approaches in literature describe the pros and cons of every type of error functions available, but it suffices to say that the data are fed to the system, which outputs a value corresponding to a certain class. If the difference between the classification and the real classification is larger than a threshold value, the error unction tweaks the weights and restarts the process, until there is no more training data available, or convergence is reached.
 
-Dentre os algoritmos de ML para classificação mais utilizados , tanto na literatura específica quanto no mercado de trabalho, encontra-se a abordagem de redes neurais artificiais (RNA). Uma RNA emula o funcionamento de um cérebro humano, focando seu processamento computacional num neurônio que recebe sinais e os transfere para o próximo neurônio. O primeiro RNA desenvolvido era composto de uma única célula, e ficou conhecido como *Perceptron simples*.
+After training phase, *testing* phase comes into play and some of the initial data that was not used during training is fed to the system, so it is possible for the programmer to assess system efficiency. This step consists of inputting this piece of history data in the already trained neural network and then counting how many entries the system misclassifies. After this final step, the neural network is either validated and can finally perform real tasks by classifying new data or it is then scratched and the whole system has to be reconstructed.
 
-Como mencionado anteriormente, o RNA é um algoritmo de ML, e consequentemente precisa aprender a ser sensato com os dados previamente alimentados nele. Isso significa que os pesos iniciais, no início do ajuste dos pesos (conhecido como *treino*) devem ser ajustados de acordo com uma função de erro. Existem diversas abordagens na literatura que descrevem vantagens e desvantagens da adoção de certas funções de erro particulares, mas é suficiente saber que os dados são alimentados no sistema, o sistema produz uma saída, e essa saída é comparada com o resultado desejado. Se a diferença for maior do que o esperado, a função erro reajusta os pesos e reinicia o processo, até se esgotar a quantidade de dados disponiveis para treino, ou o algoritmo conseguir convergir para um grau de erro aceitável.
+## Constructing the algorithm in R
 
-Por fim, após a etapa de treino, a etapa de *teste* serve para informar ao programador da RNA o grau de eficiência do algoritmo. Esta etapa consiste em inserir no RNA já treinado alguns outros dados históricos não utilizados durante a etapa de treino para saber qual o percentual de acerto da RNA. Após a obtenção dessa informação, a RNA estará validada (ou não) para ser utilizada para classificar novos dados.
+Although there are several libraries containing neural networks, this project is dedicated to show how the particularities of a single-layer perceptron work in every step of the code. This work is based on the original Java project by [Sadawi (2014)](https://github.com/nsadawi/perceptron), but it displays characteristics not found in the original material.
 
-## Modelagem do algoritmo
-
-Embora existam já diversas funções e bibliotecas próprias para a utilização de RNA, este projeto dedicou-se a modelar as particularidades de um Perceptron simples em todos os seus passos. Este trabalho é baseado no projeto de [Sadawi (2014)](https://github.com/nsadawi/perceptron), mas possui particularidades não encontradas no material original.
-
-Inicialmente, criaremos a função de ativação, que retornará 0, caso os dados fornecidos fiquem abaixo de um determinado limiar `theta` e 1 se ficar acima:
+Initially, I start by creating an activation function, which will return 0 whenever input data is below the threshold `theta` and 1 otherwise:
 
 ```{r}
-activationFunction <- function (theta, weight, cost, turnOver){
-  sumCells <- cost*weight[1] + turnOver*weight[2] + weight[3]
+activationFunction <- function (theta, weight, cost, itemUsage){
+  sumCells <- cost*weight[1] + itemUsage*weight[2] + weight[3]
   
   if (sumCells>= theta){return(1)}
   else {return(0)}
 }
 ```
 
-As outras variáveis passadas como parâmetro da função `activationFunction()` são `weight`, `cost` e `turnOver`. A variável `weight` é responsável por trazer o vetor contendo os pesos na iteração atual, enquanto que `cost` representa o custo de aquisição do pallet das matérias-primas e `turnOver` informa o giro de estoque do item em questão.
+Other variables used as parameters in `activationFunction()` are `weight`, `cost` and `itemUsage`. Variable `weight` is responsible for carrying the weight vector into the function, whereas `cost` represents acquisition cost for the pallet of a given raw material. Naturally, `itemUsage` represents item usage for the same entry.
 
-A seguir, cria-se a função `perceptron()`:
+Next, I created the function `perceptron()`:
 
 ```{r}
 perceptron <- function(maxIter, learningRate, numInstances, theta){
@@ -54,8 +50,8 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
   costTraining <- vector(length = numInstances)
   costTest <- vector(length = 100)
   
-  turnOverTraining <- vector(length = numInstances)
-  turnOverTest <- vector(length = 100)
+  itemUsageTraining <- vector(length = numInstances)
+  itemUsageTest <- vector(length = 100)
   
 #--------------------------------------
   
@@ -97,13 +93,13 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
   
   for (i in 1:(numInstances/2)){
     costTraining[i] <- runif(1, min=650, max=1000)
-    turnOverTraining[i] <- runif(1, min=23, max=35)
+    itemUsageTraining[i] <- runif(1, min=23, max=35)
     classificationTraining[i] <- 0
   }
   
   for (i in (1+numInstances/2):numInstances){
     costTraining[i] <- runif(1, min=100, max=600)
-    turnOverTraining[i] <- runif(1, min=4, max=22)
+    itemUsageTraining[i] <- runif(1, min=4, max=22)
     classificationTraining[i] <- 1
   }
   
@@ -113,7 +109,7 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
 
   for (i in 1:numInstances){
     costTraining[i]<-((1000/2)-costTraining[i])/(1000/2)
-    turnOverTraining[i]<-((35/2)-turnOverTraining[i])/(35/2)
+    itemUsageTraining[i]<-((35/2)-itemUsageTraining[i])/(35/2)
   }
   
 #--------------------------------------
@@ -126,14 +122,14 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
     for (p in 1:(numInstances)){
       #armazenando na variável output, para cada iteração, o valor obtido com a função de ativação
       output <- activationFunction (theta,weight,costTraining[p],
-                                    turnOverTraining[p])
+                                    itemUsageTraining[p])
       
       #cálculo do erro local: a diferença entre a classificação real e o que foi obtido através da função de ativação
       localError<-classificationTraining[p]-output
       
       #atualizando os valores dos pesos a partir do erro da iteração para cada atributo
       weight[1]<-weight[1]+learningRate*localError*costTraining[p]
-      weight[2]<-weight[2]+learningRate*localError*turnOverTraining[p]
+      weight[2]<-weight[2]+learningRate*localError*itemUsageTraining[p]
       weight[3]<-weight[3]+learningRate*localError 
       
       #calculando o erro acumulado global
@@ -152,20 +148,20 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
   
   for (i in 1:50){
     costTest[i] <- runif(1, min=350, max=1000)
-    turnOverTest[i] <- runif(1, min=18, max=35)
+    itemUsageTest[i] <- runif(1, min=18, max=35)
     classificationTest[i] <- 0
   }
   
   for (i in 51:100){
     costTest[i] <- runif(1, min=100, max=600)
-    turnOverTest[i] <- runif(1, min=4, max=22)
+    itemUsageTest[i] <- runif(1, min=4, max=22)
     classificationTest[i] <- 1
   }
   
   #normalizando também esses vetores
-  for (i in 1:max(length(costTest), length(turnOverTest))){
+  for (i in 1:max(length(costTest), length(itemUsageTest))){
     costTest[i]<-((1000/2)-costTest[i])/(1000/2)
-    turnOverTest[i]<-((35/2)-turnOverTest[i])/(35/2)
+    itemUsageTest[i]<-((35/2)-itemUsageTest[i])/(35/2)
   }
   
 #--------------------------------------
@@ -174,7 +170,7 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
   
   for (i in 1:100){
     
-    testOutput[i]<- activationFunction (theta, weight, costTest[i], turnOverTest[i])
+    testOutput[i]<- activationFunction (theta, weight, costTest[i], itemUsageTest[i])
 
     if(testOutput[i]==classificationTest[i]){
       classificationTest[i] <- "blue"
@@ -208,7 +204,7 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
   
 #O gráfico conterá, na parte superior, a equação da reta, bem como um plot de pontos azuis e vermelhos, dependendo da quantidade de itens classificados corretamente ou erradamente pela RNA
   
-  plot(costTest, turnOverTest,xlim=c(-1,1),ylim=c(-1,1), col=classificationTest,
+  plot(costTest, itemUsageTest,xlim=c(-1,1),ylim=c(-1,1), col=classificationTest,
        type="p", main=paste("RETA: (", signif(weight[1],digits = 2),"* X1 ) + (",
                             signif(weight[2],digits = 2),"* X2 ) + ",
                             signif(weight[3],digits = 2),"= 0"), cex = .8, 
