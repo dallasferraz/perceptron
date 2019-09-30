@@ -19,9 +19,8 @@ O algoritmo para o sistema proposto utiliza a abordagem de inteligência artific
 
 Dentre os algoritmos de ML para classificação mais utilizados , tanto na literatura específica quanto no mercado de trabalho, encontra-se a abordagem de redes neurais artificiais (RNA). Uma RNA emula o funcionamento de um cérebro humano, focando seu processamento computacional num neurônio que recebe sinais e os transfere para o próximo neurônio. O primeiro RNA desenvolvido era composto de uma única célula, e ficou conhecido como *Perceptron simples*. O esquema a seguir explica a estrutura esquemática de um Perceptron simples típico:
 
-<center>
-![](https://raw.githubusercontent.com/dallasferraz/perceptron/master/perceptron.png)
-</center>
+![perceptron](https://raw.githubusercontent.com/dallasferraz/perceptron/master/perceptron.png)
+
 
 Os nós brancos à esquerda e à direita são, respectivamente, as entradas e saídas do neurônio, que é representado pelo nó branco ao centro da figura. Tanto *criterion1* quanto *criterion2* representam as informações de entrada do neurônio, ao passo que *prime* e *standard* representam as possibilidades de resposta do neurônio, a depender do que foi alimentado na entrada. Os círculos azuis são responsávels por trazer informações sobre o *bias*, ruído inevitável em todo sistema, ao passo que os valores sobre as linhas de ligação representam os pesos que cada conexão tem no sistema.
 
