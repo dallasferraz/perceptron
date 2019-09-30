@@ -21,7 +21,6 @@ Dentre os algoritmos de ML para classificação mais utilizados , tanto na liter
 
 ![perceptron](https://raw.githubusercontent.com/dallasferraz/perceptron/master/perceptron.png)
 
-
 Os nós brancos à esquerda e à direita são, respectivamente, as entradas e saídas do neurônio, que é representado pelo nó branco ao centro da figura. Tanto *criterion1* quanto *criterion2* representam as informações de entrada do neurônio, ao passo que *prime* e *standard* representam as possibilidades de resposta do neurônio, a depender do que foi alimentado na entrada. Os círculos azuis são responsávels por trazer informações sobre o *bias*, ruído inevitável em todo sistema, ao passo que os valores sobre as linhas de ligação representam os pesos que cada conexão tem no sistema.
 
 Estas conexões possibilitam a passagem da informação de entrada para o neurônio, e finalmente para a saída. Este processo acontece através da normalização matemática dos valores de entrada, multiplicação destes valores pelos pesos de conexão e operação (muitas vezes uma soma) no neurônio, obedecendo a uma regra pré-estabelecida conhecida como *função de ativação*. Consequentemente, esta função não apenas unifica os dados normalizados e ponderados vindos das entradas, mas também comparam o resultado final com um limiar. Esta comparação, por fim, determina o grau de probabilidade ou para qual rota de sáida a informação irá ser encaminhada.
