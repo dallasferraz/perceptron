@@ -41,11 +41,11 @@ Next, I created the function `perceptron()`:
 ```{r}
 perceptron <- function(maxIter, learningRate, numInstances, theta){
   
-# Como pode ser visto nos argumentos da função, maxIter diz respeito ao número máximo de tentativas (ou seja, iterações) que o algoritmo pode tentar, antes de declarar uma mensagem de que não convergiu para o usuário. Este cenário é possível, quando se trata de um dataset contendo elementos difíceis ou impossíveis de serem separados em classes diferentes, pelo algoritmo. A variável learningRate é responsável por informar a taxa percentual de mudança dos pesos a cada iteração, enquanto que numInstances contém informações sobre a quantidade de dados disponíveis para as etapas de treino e teste. Por fim, esta função também faz uso do parâmetro theta
+# As can be seen in the parameters of the function, maxIter is related to the maximum number of attempts (iterations) the algorithm can undergo before it prints out a message warning convergence was not possible. This possibility exists under a scenario where the dataset containing the information of both classes are intertwined and not easily separable by the algorithm. The variable learningRate is responsible for informing the percent rate of weight change every iteration, whereas numInstances holds information regarding available data for training and testing phases. Finally, theta is also a parameter for this function
   
 #--------------------------------------
-  
-#No mundo real, dados a respeito das matérias-primas estariam armazenados em bancos de dados, como MySQL, MS Access, Excel etc. Para este exemplo, utilizaremos dados gerados in silico, ou seja, aleatoriamente, porém simulando serem dados reais. Serão necessários 4 vetores: 2 para treino e 2 para teste, e 2 para cada atributo (no caso, custo e giro de estoque). as dimensões do vetor de treino será fornecida na execução do algoritmo, enquanto que o vetor de teste foi escolhido como sendo de 100 itens diferentes
+
+# In reality, data regarding raw materials are stored in databases (MySQL, MC Access, SQL server, Oracle and so on). For this example, I generated in silico data, which is to say that I generated randomly data in order to simulate history records for the items. 4 vectors are necessary: 2 vectors for training, 2 vectors for testing (one for each for each factor). The dimensions are supplied during the execution of the code, while the testing vector are composed of 100 different items.
   
   costTraining <- vector(length = numInstances)
   costTest <- vector(length = 100)
@@ -54,21 +54,21 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
   itemUsageTest <- vector(length = 100)
   
 #--------------------------------------
-  
-#Juntamente com os vetores contendo os valores das características de treino e teste, também é necessário que existam vetores contendo as classificações como "prime" (0) e "standard" (1), com as mesmas dimensões dos vetores de treino e teste
+
+# It is also necessary to create vectors containing the classifications of the aforementioned items, 0 being "prime" and 1 being "standard"
   
   classificationTraining <- vector(length = numInstances)
   classificationTest <- vector(length = 100)
   
 #--------------------------------------
   
-#Um outro vetor necessário armazenará os valores da etapa de teste
+# Another necessary vector will store the values of the testing phase  
   
   testOutput <- vector(length = 100)
   
 #--------------------------------------
-  
-#Já o vetor para guardar os pesos das conexões das entradas com o neurônio também tem que contemplar o bias como um peso gerado aleatoriamente
+
+# Weight vector is also necessary and it holds information about the weights themselves but also the bias
   
   weight <- vector(length = 3)
   
@@ -78,7 +78,7 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
   
 #--------------------------------------
   
-#As variáveis de erro, necessárias nas etapas intermediárias, bem como as de contagem de iteração e de eficiência devem ser declaradas com seus respectivos valores iniciais para a primeira iteração
+# Error variables are necessary in intermediate steps, as well as variables for iteration counting and efficiency measurement  
   
   localError <- NA
   globalError <- NA
@@ -88,8 +88,8 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
   iteration <- 1
   
 #--------------------------------------
-  
-#Após a criação dos vetores que irão conter os dados de treino, é preciso que se preencham os valores adequados. Para a primeira metade dos componentes gerados in silico, forçaremos que eles sejam classificados como "prime", e exatamente por essa razão, é necessário que seus valores nos atributos correspondam à descrição dada pela empresa, em relação ao custo do pallet e ao giro de estoque. O mesmo também acontece para os produtos "standard", apenas que a classificação será 1 para todos os itens que compõem a segunda metade do vetor que guarda as informações
+
+# After creating all the necessary vectors, I filled the values of each one according to their roles. The first half of the in silico generated history data was forced to represent values that would have them classified as "prime" by any specialist according to their cost per pallet and usage level. The same also happens to "standard" items. Each group was also classified as 0 and 1, accordingly
   
   for (i in 1:(numInstances/2)){
     costTraining[i] <- runif(1, min=650, max=1000)
@@ -104,8 +104,8 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
   }
   
 #--------------------------------------
-  
-#A etapa de normalização dos vetores ocorre com uma simples conversão de valores, uma vez que os atributos apresentam-se em grandezas muito diversas. Este sistema normaliza os dados ao limitá-los proporcionalmente no intervalo continuo entre -1 e 1.
+
+# Normalizing the data is necessary in order to avoid one variable being more relevant than the other to the system. It normalizes data to range from -1 to 1
 
   for (i in 1:numInstances){
     costTraining[i]<-((1000/2)-costTraining[i])/(1000/2)
@@ -113,38 +113,36 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
   }
   
 #--------------------------------------
-  
-#As iterações de fato ocorrem seguindo passos imperativos: primeiramente, o erro global é setado como valendo 0. A finalização desse laço representa o fim da etapa de treinos, e o algoritmo pode então passar para a etapa de testes, com os 100 pontos restantes
+
+# Iterations happen in this order: first, global error is set as 0. By the end of this loop, training phase is over. Only after that the algorithm goes to testing phase, with 100 remaining items
   
   repeat{
     globalError<-0
     
     for (p in 1:(numInstances)){
-      #armazenando na variável output, para cada iteração, o valor obtido com a função de ativação
+	  # for each iteration, variable output stores the value of the activation function
       output <- activationFunction (theta,weight,costTraining[p],
                                     itemUsageTraining[p])
-      
-      #cálculo do erro local: a diferença entre a classificação real e o que foi obtido através da função de ativação
+      # local error calculation: real classification value minus calculated value via activation function
       localError<-classificationTraining[p]-output
       
-      #atualizando os valores dos pesos a partir do erro da iteração para cada atributo
+      # updating weight values
       weight[1]<-weight[1]+learningRate*localError*costTraining[p]
       weight[2]<-weight[2]+learningRate*localError*itemUsageTraining[p]
       weight[3]<-weight[3]+learningRate*localError 
       
-      #calculando o erro acumulado global
+      # calculating cumulative global error
       globalError<-globalError+localError*localError
     }
-    #avançando um passo na iteração
+    # new iteration
     iteration <- iteration+1
     
-    #A função só continua quando o erro global for 0 mais uma vez ou exceder o máximo de iterações
+    # the loop only goes forward if global error equals 0 or number of iterations excedes the maximum number of iterations allowed
     if(globalError==0 | iteration>maxIter){break()}
   }
   
 #--------------------------------------
-  
-#Como dito anteriormente, serão gerados também in silico os 100 itens de matéria-prima que dizem respeito à etapa de teste. Tal como na etapa de treino, os valores corresponderão às descrições dadas pela empresa (que, numa situação real, não precisariam ser gerados in silico, apenas capturados do banco de dados e tratados para o uso no R). Os 50 primeiros valores correspondem a componentes "prime" e os outros 50 aos componentes "standard"
+# As stated before, 100 in silico items are generated for testing phase. Like in the training phase, the variable values for these items are based on the description provided by the company (in a real situation, they would not have to be generated in silico, only retrieved from the database). The first 50 values correspond to "prime" items, whereas the last 50 correspond to "standard" items
   
   for (i in 1:50){
     costTest[i] <- runif(1, min=350, max=1000)
@@ -158,16 +156,16 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
     classificationTest[i] <- 1
   }
   
-  #normalizando também esses vetores
+  # normalizing these vectors as well
   for (i in 1:max(length(costTest), length(itemUsageTest))){
     costTest[i]<-((1000/2)-costTest[i])/(1000/2)
     itemUsageTest[i]<-((35/2)-itemUsageTest[i])/(35/2)
   }
   
 #--------------------------------------
-  
-#Os 100 itens de teste agora já estão normalizados e serão classificados pela RNA já treinada. Isso acontecerá dentro de um laço de repetição que utilizará a função de ativação, agora com os valores de teste. Após a obtenção dos valores a cada iteração, os pontos serão coloridos de acordo com o grau de acerto da rede: pontos corretamente classificados serão representados em azul no gráfico, enquanto que pontos erroneamente classificados serão classificados em vermelho
-  
+
+# The 100 testing items are now normalized and will be classified according to the trained neural network. This happens inside a loop that utilizes the activation function (this turn, using testing values instead of training values). After this, each entry will turn into a point and plotted in a graph, and the color they'll be plotted in depends on whether it was classified correctly or misclassified by the neural network. Correctly classified points are in blue and misclassified points are plotted in red
+
   for (i in 1:100){
     
     testOutput[i]<- activationFunction (theta, weight, costTest[i], itemUsageTest[i])
@@ -182,30 +180,31 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
 
 #--------------------------------------  
 
-#Para uma melhor compreensão gráfica, faz-se necessário a definição da reta que divide o gráfico onde os pontos correspondentes aos itens de teste serão representados. Os coeficientes da reta podem ser obtidos através de relações entre os pesos, uma vez que o Perceptron simples consiste especificamente em encontrar uma reta que consiga dividir (classificar) o gráfico em duas partes distintas
+# For a better visualization, it was necessary to plot a line dividing the groups of points plotted in the graph. The coefficients for the line stem from the relation between the weights in the weight vector
   
   a <- (-weight[3]/weight[2])
   b <- (-weight[1]/weight[2])
   
 #--------------------------------------
-  
-#Além da representação gráfica, informações sobre as iterações, o erro global e a eficiência da RNA também podem ser impressas no console do R
 
-  print (paste("Iterações:",iteration-1))
+# R also allows for the user to visualize information regarding the number of iterations, global error and the efficiency of the network
+
+  print(paste("Number of iterations:",iteration-1))
   
-  #prints global error
-  print (paste("Erro global:",globalError))
+  # prints global error
+  print(paste("Global error:",globalError))
   
-  #efficiency
-  print (paste("Classificações erradas:",100-right))
-  print (paste("Classificações corretas:",right))
+  # efficiency
+  print(paste("WRONG:",100-right))
+  print(paste("CORRECT:",right))
   
 #--------------------------------------
-  
-#O gráfico conterá, na parte superior, a equação da reta, bem como um plot de pontos azuis e vermelhos, dependendo da quantidade de itens classificados corretamente ou erradamente pela RNA
+
+# The graph displays the equation of the line, as well as the blue and red points, depending on how many were classified correctly 
+
   
   plot(costTest, itemUsageTest,xlim=c(-1,1),ylim=c(-1,1), col=classificationTest,
-       type="p", main=paste("RETA: (", signif(weight[1],digits = 2),"* X1 ) + (",
+       type="p", main=paste("LINE: (", signif(weight[1],digits = 2),"* X1 ) + (",
                             signif(weight[2],digits = 2),"* X2 ) + ",
                             signif(weight[3],digits = 2),"= 0"), cex = .8, 
        , pch = 16, lwd = .1 )
@@ -213,10 +212,12 @@ perceptron <- function(maxIter, learningRate, numInstances, theta){
 }
 ```
 
-Após a preparação da função `perceptron()`, resta utilizá-la com os parâmetros adequados. Neste caso, utilizaremos os 150 itens restantes para treino (lembrando que os 100 primeiros foram utilizados na fase de teste, já construídos no corpo da função), bem como 10000 iterações limite, taxa de aprendizado de 10% e limiar 0 na função de ativação:
+After the construction of the `perceptron()` function, the user can now choose values for the parameters. I utilized, just as an example, 150 items for training (the first 100 are used for testing), 10000 iterations as limit and a learning rate of 10%. 0 is the threshold of the activation function.
 
 ```{r}
 perceptron (10000,0.1,150,0)
 ```
 
-Enfim, se o decisor julgar que a rede está bem treinada, poderá utilizá-la para classificar novos itens que nunca antes foram classificados por nenhum especialista. O RNA torna-se, portanto, especialista em classificar componentes como "prime" ou "standard".
+The results can be seen below:
+
+![perceptron](https://raw.githubusercontent.com/dallasferraz/perceptron/master/perceptron.png)
